@@ -1,0 +1,7 @@
+{
+  "statusLine": {
+    "type": "command",
+    "command": "input=$(cat); cwd=$(echo \"$input\" | jq -r '.workspace.current_dir'); model=$(echo \"$input\" | jq -r '.model.display_name'); session_id=$(echo \"$input\" | jq -r '.session_id'); git_branch=$(cd \"$cwd\" 2>/dev/null && git -c core.useBuiltinFSMonitor=false rev-parse --abbrev-ref HEAD 2>/dev/null); session_dir=\"$HOME/.claude/sessions\"; mkdir -p \"$session_dir\"; session_file=\"$session_dir/$session_id\"; if [ ! -f \"$session_file\" ]; then date +%s > \"$session_file\"; fi; start_time=$(cat \"$session_file\" 2>/dev/null || echo $(date +%s)); current_time=$(date +%s); duration_seconds=$((current_time - start_time)); hours=$((duration_seconds / 3600)); minutes=$(((duration_seconds % 3600) / 60)); if [ $hours -gt 0 ]; then duration_str=\"${hours}h ${minutes}m\"; else duration_str=\"${minutes}m\"; fi; printf '\\033[0;36m%s\\033[0m' \"$cwd\"; if [ -n \"$git_branch\" ]; then printf ' \\033[0;33m(%s)\\033[0m' \"$git_branch\"; fi; printf ' \\033[0;35m[%s]\\033[0m' \"$model\"; printf ' \\033[0;32m[%s]\\033[0m' \"$duration_str\""
+  },
+  "alwaysThinkingEnabled": true
+}
